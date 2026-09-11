@@ -239,35 +239,31 @@ button{cursor:pointer}
 .message.ai .bubble{box-shadow:0 8px 25px rgba(0,0,0,.15)}
 .typing{
   display:none;
+  align-items:center;
+  gap:10px;
   color:var(--muted);
   font-size:12px;
   padding:3px 4px 15px;
 }
-.typing.show{display:block}
-
-/* ATTACHMENTS */
-.composer-wrap-inner{max-width:900px;margin:0 auto}
-.attachments{
-  display:flex;flex-wrap:wrap;gap:8px;
-  margin:0 0 8px;
+.typing.show{display:flex}
+.typing{position:relative;z-index:2;min-height:38px}
+.typing-logo{
+  width:28px;height:31px;flex:0 0 28px;
+  filter:drop-shadow(0 4px 10px rgba(255,190,22,.08));
 }
-.attachment-chip{
-  display:flex;align-items:center;gap:8px;
-  max-width:240px;padding:7px 9px;
-  border:1px solid #30343a;background:#17191c;
-  border-radius:12px;color:#dfe2e5;font-size:11px;
+.typing-label{color:#a7acb1;font-size:12px}
+.typing-dots{display:flex;align-items:center;gap:4px;margin-left:1px}
+.typing-dots i{
+  width:4px;height:4px;border-radius:50%;
+  background:#d7d9dc;opacity:.3;
+  animation:citruxDot 1.2s infinite ease-in-out;
 }
-.attachment-chip img{
-  width:34px;height:34px;object-fit:cover;border-radius:8px;
+.typing-dots i:nth-child(2){animation-delay:.16s}
+.typing-dots i:nth-child(3){animation-delay:.32s}
+@keyframes citruxDot{
+  0%,60%,100%{transform:translateY(0);opacity:.3}
+  30%{transform:translateY(-3px);opacity:1}
 }
-.attachment-name{
-  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.attachment-remove{
-  width:24px;height:24px;border:0;border-radius:8px;
-  background:#26292d;color:#c8ccd0;font-weight:700;
-}
-.attachment-remove:hover{background:#35393e;color:#fff}
 
 /* COMPOSER - deliberately NO yellow focus outline */
 .composer-wrap{
@@ -315,6 +311,18 @@ textarea::placeholder{color:#6f757c}
   text-align:center;color:#666c72;font-size:10px;
   padding:5px 0 4px;letter-spacing:.2px;
 }
+
+/* ATTACHMENTS */
+.attachment-area{max-width:900px;margin:0 auto 8px;display:flex;flex-wrap:wrap;gap:8px}
+.attachment-card{display:flex;align-items:center;gap:9px;min-width:190px;max-width:290px;border:1px solid #30343a;background:#15181b;border-radius:13px;padding:8px 10px}
+.attachment-thumb{width:42px;height:42px;object-fit:cover;border-radius:9px;border:1px solid #34383d}
+.attachment-icon{width:42px;height:42px;border-radius:9px;background:#202327;display:grid;place-items:center;font-size:20px}
+.attachment-info{min-width:0;flex:1}.attachment-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.attachment-size{font-size:10px;color:#777d84;margin-top:3px}
+.attachment-remove{width:28px;height:28px;border:0;border-radius:8px;background:transparent;color:#9da3a9;font-size:18px}.attachment-remove:hover{background:#25282c;color:#fff}
+.usage-counter{max-width:900px;margin:0 auto;text-align:right;color:#737980;font-size:11px;padding:2px 4px 3px}
+.markdown-content{line-height:1.65}.markdown-content p{margin:0 0 10px}.markdown-content p:last-child{margin-bottom:0}.markdown-content h1,.markdown-content h2,.markdown-content h3{margin:12px 0 7px;line-height:1.25}.markdown-content h1{font-size:22px}.markdown-content h2{font-size:19px}.markdown-content h3{font-size:16px}.markdown-content blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid #e6b51f;color:#bfc3c7;background:rgba(255,212,42,.04)}.markdown-content ul,.markdown-content ol{margin:7px 0 10px;padding-left:24px}.markdown-content li{margin:3px 0}.markdown-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#202327;border:1px solid #2e3237;border-radius:6px;padding:1px 5px;font-size:.92em}.markdown-content pre{overflow:auto;background:#0d0f11;border:1px solid #2b2f34;border-radius:12px;padding:13px;margin:10px 0}.markdown-content pre code{background:none;border:0;padding:0}.markdown-content a{color:#ffd42a;text-decoration:none}.markdown-content a:hover{text-decoration:underline}
+body.light .attachment-card{background:#f5f3ed;border-color:#ddd8ca}.body.light .attachment-icon{background:#e9e6dc}
+body.light .markdown-content code{background:#ece9e1;border-color:#ddd8ca}body.light .markdown-content pre{background:#f0eee8;border-color:#d9d4c9}
 
 /* GENERIC PAGES */
 .page{
@@ -436,35 +444,7 @@ body.compact .chat-scroll{padding-top:15px}
 body.compact .message{margin-bottom:9px}
 body.compact .bubble{padding:9px 13px}
 body.compact .composer{min-height:56px}
-
-.markdown-content{line-height:1.65}
-.markdown-content p{margin:0 0 10px}
-.markdown-content p:last-child{margin-bottom:0}
-.markdown-content strong{font-weight:800}
-.markdown-content em{font-style:italic}
-.markdown-content h1,.markdown-content h2,.markdown-content h3{margin:12px 0 8px;line-height:1.25}
-.markdown-content ul,.markdown-content ol{margin:8px 0 10px 22px;padding:0}
-.markdown-content li{margin:4px 0}
-.markdown-content blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid rgba(255,180,40,.55);background:rgba(255,255,255,.035);border-radius:8px}
-.markdown-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.08)}
-.markdown-content pre{margin:10px 0;padding:12px 14px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#0b0b0b}
-.markdown-content pre code{padding:0;background:transparent}
-.markdown-content a{color:#ffc94a;text-decoration:underline}
-body.light .markdown-content pre{background:#eee}
-body.light .markdown-content blockquote{background:rgba(0,0,0,.035)}
 </style>
-
-<script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['\\(', '\\)'], ['$', '$']],
-    displayMath: [['\\[', '\\]'], ['$$', '$$']],
-    processEscapes: true
-  },
-  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
-};
-</script>
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="app">
@@ -482,7 +462,7 @@ window.MathJax = {
       <path d="M17 68c7 12 20 19 34 17 12-2 21-11 25-23-9 6-17 9-28 10-11 1-20-2-31-4z" fill="#e87820" opacity=".9"/>
     </svg>
     <div>
-      <div class="brand-name">citrux</div>
+      <div class="brand-name">Citrux</div>
       <div class="brand-tag">AI ASSISTANT</div>
     </div>
   </div>
@@ -558,44 +538,61 @@ window.MathJax = {
   </div>
 
   <div id="homeChat" style="display:none;flex:1;min-height:0;flex-direction:column">
-  <div id="usageCounter" style="font-size:12px;color:#8f96a3;text-align:right;padding:8px 18px 4px">
-  100 messages remaining today
-</div>
-    <div class="chat-scroll"><div class="chat-inner" id="chatHome"></div><div class="typing" id="typingHome">Citrux is thinking…</div></div>
+    <div class="chat-scroll">
+      <div class="chat-inner" id="chatHome"></div>
+      <div class="typing" id="typingHome" aria-live="polite" aria-label="Citrux is thinking">
+        <svg class="typing-logo" viewBox="0 0 80 90" aria-hidden="true">
+          <path d="M28 25C19 18 18 9 20 2c10 5 17 12 15 23" fill="#68b844"/>
+          <path d="M17 29C8 25 3 18 1 13c9-1 18 3 22 11" fill="#68b844"/>
+          <path d="M25 30C33 19 45 17 57 20c-4 12-13 19-28 18" fill="#ee7d21"/>
+          <circle cx="40" cy="53" r="31" fill="#e87820"/>
+          <circle cx="40" cy="53" r="25" fill="#111315" stroke="#f4a323" stroke-width="3"/>
+          <path d="M40 30v46M17 53h46M24 37l32 32M56 37L24 69" stroke="#ffd52d" stroke-width="4"/>
+          <circle cx="40" cy="53" r="5" fill="#ffd52d"/>
+        </svg>
+        <span class="typing-label">Citrux</span>
+        <span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+    </div>
   </div>
 
   <div class="composer-wrap">
-    <div class="composer-wrap-inner">
-      <div class="attachments" id="attachmentsHome"></div>
-      <div class="composer">
-        <input id="fileInputHome" type="file" multiple
-          accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-          style="display:none" onchange="handleFiles(this.files,'home')">
-        <button class="attach" onclick="openFilePicker('home')" title="Add photos & files" aria-label="Add photos and files">＋</button>
-        <textarea id="textarea" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
-        <button class="send" onclick="sendMessage('textarea')" title="Send">➤</button>
-      </div>
+    <div class="attachment-area" id="attachmentsHome"></div>
+    <div class="composer">
+      <textarea id="textarea" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
+      <button class="attach" onclick="document.getElementById('fileInputHome').click()" title="Attach">⌕</button>
+      <button class="send" onclick="sendMessage()" title="Send">➤</button>
     </div>
+    <div class="usage-counter" id="usageCounter">100 messages remaining today</div>
     <div class="secure">Citrux AI • Your conversations stay on your device unless sent to the AI service</div>
+    <input id="fileInputHome" type="file" multiple accept="image/*,.txt,.md,.csv,.json,.js,.html,.css,.xml,.log" hidden>
   </div>
 </section>
 
 <!-- CHAT -->
 <section class="view chat-view" id="view-chat">
-  <div class="chat-scroll"><div class="chat-inner" id="chat"></div><div class="typing" id="typing">Citrux is thinking…</div></div>
+  <div class="chat-scroll"><div class="chat-inner" id="chat"></div><div class="typing" id="typingChat" aria-live="polite" aria-label="Citrux is thinking">
+    <svg class="typing-logo" viewBox="0 0 80 90" aria-label="Citrux">
+      <path d="M28 25C19 18 18 9 20 2c10 5 17 12 15 23" fill="#68b844"/>
+      <path d="M17 29C8 25 3 18 1 13c9-1 18 3 22 11" fill="#68b844"/>
+      <path d="M25 30C33 19 45 17 57 20c-4 12-13 19-28 18" fill="#ee7d21"/>
+      <circle cx="40" cy="53" r="31" fill="#e87820"/>
+      <circle cx="40" cy="53" r="25" fill="#111315" stroke="#f4a323" stroke-width="3"/>
+      <path d="M40 30v46M17 53h46M24 37l32 32M56 37L24 69" stroke="#ffd52d" stroke-width="4"/>
+      <circle cx="40" cy="53" r="5" fill="#ffd52d"/>
+    </svg>
+    <span class="typing-label">Citrux</span>
+    <span class="typing-dots"><i></i><i></i><i></i></span>
+  </div></div>
   <div class="composer-wrap">
-    <div class="composer-wrap-inner">
-      <div class="attachments" id="attachmentsChat"></div>
-      <div class="composer">
-        <input id="fileInputChat" type="file" multiple
-          accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-          style="display:none" onchange="handleFiles(this.files,'chat')">
-        <button class="attach" onclick="openFilePicker('chat')" title="Add photos & files" aria-label="Add photos and files">＋</button>
-        <textarea id="textareaChat" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
-        <button class="send" onclick="sendMessage('textareaChat')" title="Send">➤</button>
-      </div>
+    <div class="attachment-area" id="attachmentsChat"></div>
+    <div class="composer">
+      <textarea id="textareaChat" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
+      <button class="attach" onclick="document.getElementById('fileInputChat').click()" title="Attach">⌕</button>
+      <button class="send" onclick="sendMessage('textareaChat')">➤</button>
     </div>
     <div class="secure">Citrux AI • Secure conversation</div>
+    <input id="fileInputChat" type="file" multiple accept="image/*,.txt,.md,.csv,.json,.js,.html,.css,.xml,.log" hidden>
   </div>
 </section>
 
@@ -670,13 +667,17 @@ window.MathJax = {
 <!-- LOGIN MODAL -->
 <div class="modal" id="loginModal">
   <div class="modal-box">
-    <h2>Welcome to Citrux</h2>
-    <p>This is a local demo login for the interface. It does not create a real online account.</p>
-    <div class="field"><label>Name</label><input id="loginName" placeholder="Your name"></div>
+    <h2 id="authTitle">Log in to Citrux</h2>
+    <p id="authSubtitle">Use your Citrux account to continue.</p>
+    <div class="field" id="nameField" style="display:none"><label>Name</label><input id="loginName" placeholder="Your name"></div>
     <div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input id="loginPassword" type="password" placeholder="8–128 characters"></div>
+    <div style="text-align:left;font-size:12px;color:#92979d;margin-top:8px">
+      <button id="authToggle" onclick="toggleAuthMode()" style="border:0;background:none;color:#ffd42a;padding:0">Create an account</button>
+    </div>
     <div class="modal-actions">
       <button onclick="closeLogin()">Cancel</button>
-      <button class="primary" onclick="saveLogin()">Continue</button>
+      <button class="primary" id="authSubmit" onclick="submitAuth()">Log in</button>
     </div>
   </div>
 </div>
@@ -684,8 +685,10 @@ window.MathJax = {
 <script>
 const $ = id => document.getElementById(id);
 let currentMessages = [];
-let pendingAttachments = {home:[],chat:[]};
+let currentConversationId = localStorage.getItem('citrux_conversation_id') || (crypto.randomUUID ? crypto.randomUUID() : 'citrux-'+Date.now()+'-'+Math.random().toString(16).slice(2));
+localStorage.setItem('citrux_conversation_id', currentConversationId);
 let saveChats = localStorage.getItem('citrux_save_chats') !== 'false';
+let pendingAttachments = {home:[], chat:[]};
 
 const titles = {
   home:['New Chat','Start a new conversation with Citrux'],
@@ -720,15 +723,20 @@ function toggleSidebar(){ $('sidebar').classList.toggle('open'); }
 
 function newChat(){
   currentMessages=[];
-  pendingAttachments={home:[],chat:[]};
-  renderAttachments('home');
-  renderAttachments('chat');
+  currentConversationId = crypto.randomUUID ? crypto.randomUUID() : 'citrux-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+  localStorage.setItem('citrux_conversation_id', currentConversationId);
   $('chat').innerHTML='';
   $('homeChat').style.display='none';
   $('hero').style.display='block';
   $('quickGrid').style.display='grid';
   $('textarea').value='';
   $('textareaChat').value='';
+  pendingAttachments.home=[];
+  pendingAttachments.chat=[];
+  renderAttachments('home');
+  renderAttachments('chat');
+  clearFileInput('home');
+  clearFileInput('chat');
   showView('home');
   $('textarea').focus();
 }
@@ -750,7 +758,6 @@ function renderMarkdown(text){
     codeBlocks.push(`<pre><code>${escapeHTML(code.replace(/\n$/,''))}</code></pre>`);
     return token;
   });
-
   let html=escapeHTML(src);
   html=html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
   html=html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
@@ -758,8 +765,8 @@ function renderMarkdown(text){
   html=html.replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>');
   html=html.replace(/^(?:[-*]) (.+)$/gm,'<li>$1</li>');
   html=html.replace(/^(\d+)\. (.+)$/gm,'<li data-ordered="$1">$2</li>');
-  html=html.replace(/(<li>.*<\/li>(?:\n|$))+/g,m=>`<ul>${m.replace(/\n/g,'')}</ul>`);
-  html=html.replace(/(<li data-ordered="\d+">.*<\/li>(?:\n|$))+/g,m=>`<ol>${m.replace(/ data-ordered="\d+"/g,'').replace(/\n/g,'')}</ol>`);
+  html=html.replace(/(<li>.*<\/li>(?:\n|$))+/gm,m=>`<ul>${m.replace(/\n/g,'')}</ul>`);
+  html=html.replace(/(<li data-ordered="\d+">.*<\/li>(?:\n|$))+/gm,m=>`<ol>${m.replace(/ data-ordered="\d+"/g,'').replace(/\n/g,'')}</ol>`);
   html=html.replace(/`([^`\n]+)`/g,'<code>$1</code>');
   html=html.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
   html=html.replace(/__([^_\n]+)__/g,'<strong>$1</strong>');
@@ -790,178 +797,259 @@ function addBubble(target,role,text){
   if(sc) sc.scrollTop=sc.scrollHeight;
 }
 
-async function sendMessage(inputId='textarea'){
-  const input=$(inputId);
-  const area=inputId==='textarea'?'home':'chat';
-  const text=input.value.trim();
-  const files=pendingAttachments[area]||[];
+let authMode='login';
+let currentUser=null;
 
-  if(!text && !files.length) return;
+function updateAuthModal(){
+  $('authTitle').textContent=authMode==='login'?'Log in to Citrux':'Create your Citrux account';
+  $('authSubtitle').textContent=authMode==='login'?'Use your Citrux account to continue.':'Create an account to save chats securely.';
+  $('nameField').style.display=authMode==='register'?'block':'none';
+  $('authSubmit').textContent=authMode==='login'?'Log in':'Create account';
+  $('authToggle').textContent=authMode==='login'?'Create an account':'Already have an account? Log in';
+}
 
-  if(inputId==='textarea'){
-    $('hero').style.display='none';
-    $('quickGrid').style.display='none';
-    $('homeChat').style.display='flex';
+function openLogin(){
+  authMode='login';
+  const account=JSON.parse(localStorage.getItem('citrux_account')||'null');
+  if(account){
+    $('loginName').value=account.name||'';
+    $('loginEmail').value=account.email||'';
+  }else{
+    $('loginName').value='';
+    $('loginEmail').value='';
+  }
+  $('loginPassword').value='';
+  updateAuthModal();
+  $('loginModal').classList.add('show');
+  setTimeout(()=>$('loginEmail').focus(),50);
+}
+
+function closeLogin(){ $('loginModal').classList.remove('show'); }
+
+function toggleAuthMode(){
+  authMode=authMode==='login'?'register':'login';
+  updateAuthModal();
+}
+
+function applyAuthenticatedUser(user){
+  currentUser=user||null;
+  if(user){
+    const label=user.name||user.email||'Citrux User';
+    $('sideName').textContent=label;
+    $('sideAvatar').textContent=label.charAt(0).toUpperCase();
+    document.querySelectorAll('.login-top,.login-btn').forEach(btn=>{
+      btn.textContent='Log out';
+      btn.onclick=logout;
+    });
+  }else{
+    $('sideName').textContent='Guest User';
+    $('sideAvatar').textContent='G';
+    document.querySelectorAll('.login-top').forEach(btn=>{
+      btn.textContent='♙  Log in';
+      btn.onclick=openLogin;
+    });
+    document.querySelectorAll('.login-btn').forEach(btn=>{
+      btn.textContent='Log in';
+      btn.onclick=openLogin;
+    });
+  }
+}
+
+async function submitAuth(){
+  const email=$('loginEmail').value.trim().toLowerCase();
+  const password=$('loginPassword').value;
+  const name=$('loginName').value.trim();
+
+  if(!email){
+    alert('Please enter your email address.');
+    return;
   }
 
-  showView('home');
-  input.value='';
-  input.style.height='42px';
-
-  const target='chatHome';
-
-  if(text) {
-    addBubble(target,'user',text);
-    currentMessages.push({role:'user',content:text});
+  if(!password || password.length<8){
+    alert('Password must be at least 8 characters.');
+    return;
   }
 
-  if(files.length){
-    const names=files.map(f=>`📎 ${f.name}`).join('\n');
-    addBubble(target,'user',names);
-
-    // The files are now part of the sent message, so remove the composer previews immediately.
-    pendingAttachments[area]=[];
-    renderAttachments(area);
-    const fileInput=$('fileInput'+(area==='home'?'Home':'Chat'));
-    if(fileInput) fileInput.value='';
+  if(authMode==='register' && !name){
+    alert('Please enter your name.');
+    return;
   }
 
-  const outgoingMessages=currentMessages.slice(-20);
+  const endpoint=authMode==='login'?'/api/auth/login':'/api/auth/register';
+  const body=authMode==='login'?{email,password}:{email,password,name};
 
-  $('typing').style.display='block'; $('typingHome').style.display='block';
+  const button=$('authSubmit');
+  const original=button.textContent;
+
+  button.disabled=true;
+  button.textContent=authMode==='login'?'Logging in…':'Creating…';
 
   try{
-    const attachments=await Promise.all(files.map(async file=>({
-      name:file.name,
-      type:file.type || 'application/octet-stream',
-      size:file.size,
-      dataUrl:await fileToDataUrl(file)
-    })));
-
-    const response=await fetch('/api/chat',{
+    const response=await fetch(endpoint,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        messages:outgoingMessages,
-        attachments
-      })
+      credentials:'same-origin',
+      body:JSON.stringify(body)
     });
 
     const data=await response.json().catch(()=>({}));
-if(data.usage){
-  const counter=$('usageCounter');
-  if(counter){
-    counter.textContent=`${data.usage.remaining} messages remaining today`;
-  }
-}
-    if(!response.ok) throw new Error(data.error || 'Server error');
 
-    const reply=data.reply || 'I received your message, but no response was returned.';
-    addBubble(target,'ai',reply);
-    currentMessages.push({role:'assistant',content:reply});
+    if(!response.ok){
+      throw new Error(data.error||'Authentication failed');
+    }
 
-    if(text) saveCurrentChat(text);
-    else if(files.length) saveCurrentChat(files[0].name);
+    applyAuthenticatedUser(data.user);
+
+    if(data.user){
+      localStorage.setItem('citrux_account',JSON.stringify(data.user));
+    }
+
+    closeLogin();
+    renderRecent();
 
   }catch(error){
-    console.error(error);
-    addBubble(target,'ai',
-      'Sorry, I couldn’t connect to Citrux AI right now. Please make sure the Citrux server is running at http://localhost:3000.'
-    );
+    alert(error.message||'Authentication failed.');
   }finally{
-    $('typing').style.display='none'; $('typingHome').style.display='none';
+    button.disabled=false;
+    button.textContent=original;
   }
 }
 
-function openFilePicker(area){
-  const input=$('fileInput'+(area==='home'?'Home':'Chat'));
-  if(input) input.click();
-}
+async function checkAuth(){
+  try{
+    const response=await fetch('/api/auth/me',{credentials:'same-origin'});
+    const data=await response.json().catch(()=>({}));
 
-function fileToDataUrl(file){
-  return new Promise((resolve,reject)=>{
-    const reader=new FileReader();
-    reader.onload=()=>resolve(reader.result);
-    reader.onerror=()=>reject(reader.error || new Error('Could not read file'));
-    reader.readAsDataURL(file);
-  });
-}
-
-function handleFiles(fileList,area='home'){
-  const incoming=Array.from(fileList||[]);
-  if(!incoming.length) return;
-
-  const current=pendingAttachments[area]||[];
-  const maxFiles=10;
-  const maxSize=20*1024*1024;
-
-  for(const file of incoming){
-    if(current.length>=maxFiles){
-      alert('You can attach up to 10 files at a time.');
-      break;
-    }
-    if(file.size>maxSize){
-      alert(`${file.name} is larger than 20 MB and was not added.`);
-      continue;
-    }
-    current.push(file);
-  }
-
-  pendingAttachments[area]=current;
-  renderAttachments(area);
-
-  const input=$('fileInput'+(area==='home'?'Home':'Chat'));
-  if(input) input.value='';
-}
-
-function renderAttachments(area='home'){
-  const container=$('attachments'+(area==='home'?'Home':'Chat'));
-  if(!container) return;
-
-  const files=pendingAttachments[area]||[];
-  container.innerHTML='';
-
-  files.forEach((file,index)=>{
-    const chip=document.createElement('div');
-    chip.className='attachment-chip';
-
-    if(file.type.startsWith('image/')){
-      const img=document.createElement('img');
-      img.src=URL.createObjectURL(file);
-      img.alt=file.name;
-      chip.appendChild(img);
+    if(data.authenticated){
+      applyAuthenticatedUser(data.user);
+      localStorage.setItem('citrux_account',JSON.stringify(data.user));
     }else{
-      const icon=document.createElement('span');
-      icon.textContent='📎';
-      icon.style.fontSize='20px';
-      chip.appendChild(icon);
+      applyAuthenticatedUser(null);
     }
 
-    const name=document.createElement('span');
-    name.className='attachment-name';
-    name.textContent=file.name;
-    chip.appendChild(name);
-
-    const remove=document.createElement('button');
-    remove.className='attachment-remove';
-    remove.type='button';
-    remove.textContent='×';
-    remove.title='Remove attachment';
-    remove.onclick=()=>{
-      pendingAttachments[area].splice(index,1);
-      renderAttachments(area);
-    };
-    chip.appendChild(remove);
-
-    container.appendChild(chip);
-  });
+  }catch(error){
+    console.error('Auth check failed:',error);
+  }
 }
 
+async function logout(){
+  try{
+    await fetch('/api/auth/logout',{
+      method:'POST',
+      credentials:'same-origin'
+    });
+  }catch(error){
+    console.error('Logout failed:',error);
+  }
+
+  currentUser=null;
+  localStorage.removeItem('citrux_account');
+  applyAuthenticatedUser(null);
+  renderRecent();
+}
+
+function isTextFile(file){
+  return /\.(txt|md|csv|json|js|html|css|xml|log)$/i.test(file.name) || (file.type && (file.type.startsWith('text/') || file.type.includes('json')));
+}
+function formatBytes(bytes){
+  if(!bytes) return '0 B';
+  const units=['B','KB','MB','GB'];
+  const i=Math.min(Math.floor(Math.log(bytes)/Math.log(1024)),units.length-1);
+  return `${(bytes/Math.pow(1024,i)).toFixed(i?1:0)} ${units[i]}`;
+}
+function fileToDataURL(file){
+  return new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(reader.result); reader.onerror=()=>reject(reader.error); reader.readAsDataURL(file); });
+}
+function readTextFile(file){
+  return new Promise((resolve,reject)=>{ const reader=new FileReader(); reader.onload=()=>resolve(String(reader.result||'')); reader.onerror=()=>reject(reader.error); reader.readAsText(file); });
+}
+async function handleFiles(area,fileList){
+  for(const file of Array.from(fileList||[])){
+    if(pendingAttachments[area].some(x=>x.name===file.name&&x.size===file.size)) continue;
+    if(file.size>8*1024*1024){ alert(`${file.name} is too large.\n\nMaximum supported size is 8 MB.`); continue; }
+    try{
+      const dataUrl=await fileToDataURL(file);
+      const textContent=isTextFile(file)?await readTextFile(file):null;
+      pendingAttachments[area].push({name:file.name,type:file.type||'application/octet-stream',size:file.size,dataUrl,textContent});
+    }catch(error){ console.error(error); alert(`Could not read ${file.name}.`); }
+  }
+  renderAttachments(area);
+}
+function renderAttachments(area){
+  const container=$(area==='home'?'attachmentsHome':'attachmentsChat');
+  if(!container) return;
+  container.innerHTML='';
+  (pendingAttachments[area]||[]).forEach((file,index)=>{
+    const card=document.createElement('div'); card.className='attachment-card';
+    const visual=file.type.startsWith('image/')&&file.dataUrl?`<img class="attachment-thumb" src="${file.dataUrl}" alt="">`:`<div class="attachment-icon">${/\.(js|html|css|json|xml)$/i.test(file.name)?'💻':/\.(csv)$/i.test(file.name)?'📊':'📄'}</div>`;
+    card.innerHTML=`${visual}<div class="attachment-info"><div class="attachment-name" title="${escapeHTML(file.name)}">${escapeHTML(file.name)}</div><div class="attachment-size">${formatBytes(file.size)}</div></div><button class="attachment-remove" type="button" onclick="removeAttachment('${area}',${index})" title="Remove">×</button>`;
+    container.appendChild(card);
+  });
+}
+function removeAttachment(area,index){ pendingAttachments[area].splice(index,1); renderAttachments(area); }
+function clearFileInput(area){ const input=$(area==='home'?'fileInputHome':'fileInputChat'); if(input) input.value=''; }
+function prepareAttachments(area){ return (pendingAttachments[area]||[]).map(file=>({name:file.name,mimeType:file.type||'application/octet-stream',dataUrl:file.dataUrl||null,textContent:file.textContent||null,size:file.size||0})); }
+
+async function sendMessage(inputId='textarea'){
+  const input=$(inputId);
+  if(!input) return;
+  const text=input.value.trim();
+  const area=inputId==='textareaChat'?'chat':'home';
+  const attachments=prepareAttachments(area);
+  if(!text && !attachments.length) return;
+  if(window.citruxBusy) return;
+  window.citruxBusy=true;
+  if(area==='home'){ $('hero').style.display='none'; $('quickGrid').style.display='none'; $('homeChat').style.display='flex'; }
+  showView('home');
+  input.value=''; input.style.height='42px';
+  const target='chatHome';
+  if(text) addBubble(target,'user',text); else addBubble(target,'user',attachments.map(f=>`📎 ${f.name}`).join('\n'));
+  currentMessages.push({role:'user',content:text||attachments.map(f=>`Attached file: ${f.name}`).join('\n')});
+  pendingAttachments[area]=[]; renderAttachments(area); clearFileInput(area);
+  setTyping(true);
+  try{
+    const history=currentMessages.slice(-20).map(m=>({role:m.role,content:String(m.content)}));
+    const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({conversationId:currentConversationId,messages:history,attachments})});
+    const data=await response.json().catch(()=>({}));
+    if(data.usage && $('usageCounter')) $('usageCounter').textContent=`${data.usage.remaining} messages remaining today`;
+    if(response.status===401){ openLogin(); throw new Error('Please log in to use Citrux.'); }
+    if(!response.ok) throw new Error(data.error||'Server error');
+    const reply=data.reply||'I received your message, but no response was returned.';
+    addBubble(target,'ai',reply);
+    currentMessages.push({role:'assistant',content:reply});
+    saveCurrentChat(text||attachments[0]?.name||'New Chat');
+    await saveConversationToDatabase();
+  }catch(error){
+    console.error('Citrux request failed:',error);
+    addBubble(target,'ai',error.message==='Please log in to use Citrux.'?error.message:'Sorry, I couldn’t connect to Citrux AI right now. Please make sure the Citrux server is running.');
+  }finally{ setTyping(false); window.citruxBusy=false; input.focus(); }
+}
+
+function setTyping(show){
+  ['typingHome','typingChat'].forEach(id=>{
+    const el=$(id);
+    if(el) el.classList.toggle('show',show);
+  });
+
+  if(show){
+    const sc=$('chatHome')?.closest('.chat-scroll');
+    if(sc){
+      requestAnimationFrame(()=>{
+        sc.scrollTop=sc.scrollHeight;
+      });
+    }
+  }
+}
 
 function saveCurrentChat(firstMessage){
   if(!saveChats || !currentMessages.length) return;
+
   const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]');
-  const title=firstMessage.length>42?firstMessage.slice(0,42)+'…':firstMessage;
+
+  const title=firstMessage.length>42
+    ? firstMessage.slice(0,42)+'…'
+    : firstMessage;
+
   chats.unshift({
     id:Date.now(),
     title,
@@ -969,152 +1057,482 @@ function saveCurrentChat(firstMessage){
     messages:currentMessages,
     time:new Date().toLocaleString()
   });
-  localStorage.setItem('citrux_chats',JSON.stringify(chats.slice(0,30)));
+
+  localStorage.setItem(
+    'citrux_chats',
+    JSON.stringify(chats.slice(0,30))
+  );
 }
 
-function renderRecent(){
+async function saveConversationToDatabase(){
+  if(!currentConversationId || !currentMessages.length) return;
+
+  try{
+    const firstUser=currentMessages.find(m=>m.role==='user');
+
+    const title=(firstUser?.content||'New Chat')
+      .trim()
+      .slice(0,80)||'New Chat';
+
+    const response=await fetch('/api/conversations',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      credentials:'same-origin',
+      body:JSON.stringify({
+        conversationId:currentConversationId,
+        title,
+        messages:currentMessages
+      })
+    });
+
+    if(response.status===401){
+      openLogin();
+      return false;
+    }
+
+    if(!response.ok){
+      console.error(
+        'Conversation save failed:',
+        await response.text()
+      );
+    }
+
+    return response.ok;
+
+  }catch(error){
+    console.error('Conversation save failed:',error);
+    return false;
+  }
+}
+
+async function loadRecentFromDatabase(){
+  try{
+    const response=await fetch(
+      '/api/conversations',
+      {credentials:'same-origin'}
+    );
+
+    if(!response.ok) return null;
+
+    const data=await response.json();
+
+    return Array.isArray(data.conversations)
+      ? data.conversations
+      : [];
+
+  }catch(error){
+    console.error('Recent chats load failed:',error);
+    return null;
+  }
+}
+
+async function openDatabaseChat(conversationId){
+  try{
+    const response=await fetch(
+      '/api/conversations/'+encodeURIComponent(conversationId),
+      {credentials:'same-origin'}
+    );
+
+    if(!response.ok){
+      throw new Error('Conversation not found');
+    }
+
+    const data=await response.json();
+    const conversation=data.conversation;
+
+    currentConversationId=conversation.conversation_id;
+
+    localStorage.setItem(
+      'citrux_conversation_id',
+      currentConversationId
+    );
+
+    currentMessages=Array.isArray(conversation.messages)
+      ? conversation.messages
+      : [];
+
+    $('hero').style.display='none';
+    $('quickGrid').style.display='none';
+    $('homeChat').style.display='flex';
+    $('chatHome').innerHTML='';
+
+    currentMessages.forEach(m=>{
+      addBubble(
+        'chatHome',
+        m.role==='user'?'user':'ai',
+        m.content
+      );
+    });
+
+    showView('home');
+
+  }catch(error){
+    console.error('Conversation open failed:',error);
+    alert('Could not open this conversation.');
+  }
+}
+
+async function renderRecent(){
   const list=$('recentList');
   const q=($('recentSearch').value||'').toLowerCase();
-  const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]').filter(c=>(c.title+c.preview).toLowerCase().includes(q));
+
+  const remote=await loadRecentFromDatabase();
+
+  if(remote!==null){
+    const chats=remote.filter(c=>
+      (c.title||'').toLowerCase().includes(q)
+    );
+
+    if(!chats.length){
+      list.innerHTML='<div class="empty">No recent chats found.</div>';
+      return;
+    }
+
+    list.innerHTML=chats.map(c=>{
+      const date=c.updated_at
+        ? new Date(c.updated_at).toLocaleString()
+        : '';
+
+      return `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openDatabaseChat('${String(c.conversation_id).replace(/'/g,"\\'")}')">
+        <h3>💬 ${escapeHTML(c.title||'New Chat')}</h3>
+        <p><small>${escapeHTML(date)}</small></p>
+      </div>`;
+    }).join('');
+
+    return;
+  }
+
+  const chats=JSON.parse(
+    localStorage.getItem('citrux_chats')||'[]'
+  ).filter(c=>
+    (c.title+c.preview)
+      .toLowerCase()
+      .includes(q)
+  );
+
   if(!chats.length){
     list.innerHTML='<div class="empty">No recent chats found.</div>';
     return;
   }
-  list.innerHTML=chats.map(c=>`
-    <div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openChat(${c.id})">
+
+  list.innerHTML=chats.map(c=>
+    `<div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openChat(${c.id})">
       <h3>💬 ${escapeHTML(c.title)}</h3>
-      <p>${escapeHTML(c.preview)}<br><small>${escapeHTML(c.time)}</small></p>
-    </div>`).join('');
+      <p>
+        ${escapeHTML(c.preview)}
+        <br>
+        <small>${escapeHTML(c.time)}</small>
+      </p>
+    </div>`
+  ).join('');
 }
 
 function openChat(id){
-  const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]');
+  const chats=JSON.parse(
+    localStorage.getItem('citrux_chats')||'[]'
+  );
+
   const item=chats.find(c=>c.id===id);
+
   if(!item)return;
+
   currentMessages=item.messages||[];
+
   $('hero').style.display='none';
   $('quickGrid').style.display='none';
   $('homeChat').style.display='flex';
   $('chatHome').innerHTML='';
-  currentMessages.forEach(m=>addBubble('chatHome',m.role==='user'?'user':'ai',m.content));
+
+  currentMessages.forEach(m=>
+    addBubble(
+      'chatHome',
+      m.role==='user'?'user':'ai',
+      m.content
+    )
+  );
+
   showView('home');
 }
 
 function addLibrary(){
   const title=prompt('Library note title:');
+
   if(!title)return;
-  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]');
-  items.unshift({id:Date.now(),title,body:'Saved locally in your Citrux Library.'});
-  localStorage.setItem('citrux_library',JSON.stringify(items));
+
+  const items=JSON.parse(
+    localStorage.getItem('citrux_library')||'[]'
+  );
+
+  items.unshift({
+    id:Date.now(),
+    title,
+    body:'Saved locally in your Citrux Library.'
+  });
+
+  localStorage.setItem(
+    'citrux_library',
+    JSON.stringify(items)
+  );
+
   renderLibrary();
 }
+
 function renderLibrary(){
-  const list=$('libraryList'), empty=$('libraryEmpty');
-  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]');
-  list.innerHTML=items.map(x=>`<div class="card"><h3>▤ ${escapeHTML(x.title)}</h3><p>${escapeHTML(x.body)}</p><button onclick="deleteLibrary(${x.id})">Remove</button></div>`).join('');
+  const list=$('libraryList');
+  const empty=$('libraryEmpty');
+
+  const items=JSON.parse(
+    localStorage.getItem('citrux_library')||'[]'
+  );
+
+  list.innerHTML=items.map(x=>
+    `<div class="card">
+      <h3>▤ ${escapeHTML(x.title)}</h3>
+      <p>${escapeHTML(x.body)}</p>
+      <button onclick="deleteLibrary(${x.id})">Remove</button>
+    </div>`
+  ).join('');
+
   empty.style.display=items.length?'none':'block';
 }
+
 function deleteLibrary(id){
-  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]').filter(x=>x.id!==id);
-  localStorage.setItem('citrux_library',JSON.stringify(items)); renderLibrary();
+  const items=JSON.parse(
+    localStorage.getItem('citrux_library')||'[]'
+  ).filter(x=>x.id!==id);
+
+  localStorage.setItem(
+    'citrux_library',
+    JSON.stringify(items)
+  );
+
+  renderLibrary();
 }
 
 function addProject(){
   const title=prompt('Project name:');
+
   if(!title)return;
-  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]');
-  items.unshift({id:Date.now(),title});
-  localStorage.setItem('citrux_projects',JSON.stringify(items)); renderProjects();
+
+  const items=JSON.parse(
+    localStorage.getItem('citrux_projects')||'[]'
+  );
+
+  items.unshift({
+    id:Date.now(),
+    title
+  });
+
+  localStorage.setItem(
+    'citrux_projects',
+    JSON.stringify(items)
+  );
+
+  renderProjects();
 }
+
 function renderProjects(){
-  const list=$('projectList'), empty=$('projectEmpty');
-  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]');
-  list.innerHTML=items.map(x=>`<div class="card"><h3>□ ${escapeHTML(x.title)}</h3><p>A local Citrux project workspace.</p><button onclick="deleteProject(${x.id})">Remove</button></div>`).join('');
+  const list=$('projectList');
+  const empty=$('projectEmpty');
+
+  const items=JSON.parse(
+    localStorage.getItem('citrux_projects')||'[]'
+  );
+
+  list.innerHTML=items.map(x=>
+    `<div class="card">
+      <h3>□ ${escapeHTML(x.title)}</h3>
+      <p>A local Citrux project workspace.</p>
+      <button onclick="deleteProject(${x.id})">Remove</button>
+    </div>`
+  ).join('');
+
   empty.style.display=items.length?'none':'block';
 }
+
 function deleteProject(id){
-  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]').filter(x=>x.id!==id);
-  localStorage.setItem('citrux_projects',JSON.stringify(items)); renderProjects();
+  const items=JSON.parse(
+    localStorage.getItem('citrux_projects')||'[]'
+  ).filter(x=>x.id!==id);
+
+  localStorage.setItem(
+    'citrux_projects',
+    JSON.stringify(items)
+  );
+
+  renderProjects();
 }
 
 function toggleTheme(){
   document.body.classList.toggle('light');
+
   const light=document.body.classList.contains('light');
-  localStorage.setItem('citrux_theme',light?'light':'dark');
+
+  localStorage.setItem(
+    'citrux_theme',
+    light?'light':'dark'
+  );
+
   syncSettings();
-}
-function toggleSave(){
-  saveChats=!saveChats;
-  localStorage.setItem('citrux_save_chats',saveChats);
-  syncSettings();
-}
-function toggleCompact(){
-  document.body.classList.toggle('compact');
-  localStorage.setItem('citrux_compact',document.body.classList.contains('compact'));
-  syncSettings();
-}
-function syncSettings(){
-  const light=document.body.classList.contains('light');
-  $('darkSwitch').classList.toggle('on',!light);
-  $('saveSwitch').classList.toggle('on',saveChats);
-  $('compactSwitch').classList.toggle('on',document.body.classList.contains('compact'));
-}
-function clearData(){
-  if(!confirm('Clear all Citrux local data?'))return;
-  ['citrux_chats','citrux_library','citrux_projects','citrux_account'].forEach(k=>localStorage.removeItem(k));
-  saveChats=true;
-  localStorage.setItem('citrux_save_chats','true');
-  $('sideName').textContent='Guest User';
-  $('sideAvatar').textContent='G';
-  renderRecent();renderLibrary();renderProjects();syncSettings();
-  alert('Local Citrux data cleared.');
 }
 
-function openLogin(){
-  const account=JSON.parse(localStorage.getItem('citrux_account')||'null');
-  if(account){
-    $('loginName').value=account.name||'';
-    $('loginEmail').value=account.email||'';
-  }
-  $('loginModal').classList.add('show');
+function toggleSave(){
+  saveChats=!saveChats;
+
+  localStorage.setItem(
+    'citrux_save_chats',
+    saveChats
+  );
+
+  syncSettings();
 }
-function closeLogin(){ $('loginModal').classList.remove('show'); }
-function saveLogin(){
-  const name=$('loginName').value.trim()||'Citrux User';
-  const email=$('loginEmail').value.trim();
-  if(!email){alert('Please enter an email address.');return}
-  localStorage.setItem('citrux_account',JSON.stringify({name,email}));
-  $('sideName').textContent=name;
-  $('sideAvatar').textContent=name.charAt(0).toUpperCase();
-  closeLogin();
+
+function toggleCompact(){
+  document.body.classList.toggle('compact');
+
+  localStorage.setItem(
+    'citrux_compact',
+    document.body.classList.contains('compact')
+  );
+
+  syncSettings();
+}
+
+function syncSettings(){
+  const light=document.body.classList.contains('light');
+
+  $('darkSwitch').classList.toggle(
+    'on',
+    !light
+  );
+
+  $('saveSwitch').classList.toggle(
+    'on',
+    saveChats
+  );
+
+  $('compactSwitch').classList.toggle(
+    'on',
+    document.body.classList.contains('compact')
+  );
+}
+
+function clearData(){
+  if(!confirm('Clear all Citrux local data?'))return;
+
+  [
+    'citrux_chats',
+    'citrux_library',
+    'citrux_projects',
+    'citrux_account'
+  ].forEach(k=>
+    localStorage.removeItem(k)
+  );
+
+  saveChats=true;
+
+  localStorage.setItem(
+    'citrux_save_chats',
+    'true'
+  );
+
+  $('sideName').textContent='Guest User';
+  $('sideAvatar').textContent='G';
+
+  renderRecent();
+  renderLibrary();
+  renderProjects();
+  syncSettings();
+
+  alert('Local Citrux data cleared.');
 }
 
 function autoGrow(el){
   el.style.height='auto';
-  el.style.height=Math.min(el.scrollHeight,150)+'px';
+
+  el.style.height=
+    Math.min(el.scrollHeight,150)+'px';
 }
-$('textarea').addEventListener('input',e=>autoGrow(e.target));
-$('textareaChat').addEventListener('input',e=>autoGrow(e.target));
-$('textarea').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage('textarea')}
-});
-$('textareaChat').addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage('textareaChat')}
-});
-$('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin()});
+
+$('textarea').addEventListener(
+  'input',
+  e=>autoGrow(e.target)
+);
+
+$('textareaChat').addEventListener(
+  'input',
+  e=>autoGrow(e.target)
+);
+
+$('textarea').addEventListener(
+  'keydown',
+  e=>{
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      sendMessage('textarea');
+    }
+  }
+);
+
+$('textareaChat').addEventListener(
+  'keydown',
+  e=>{
+    if(e.key==='Enter'&&!e.shiftKey){
+      e.preventDefault();
+      sendMessage('textareaChat');
+    }
+  }
+);
+
+$('fileInputHome').addEventListener('change',e=>handleFiles('home',e.target.files));
+$('fileInputChat').addEventListener('change',e=>handleFiles('chat',e.target.files));
+
+$('loginModal').addEventListener(
+  'click',
+  e=>{
+    if(e.target.id==='loginModal'){
+      closeLogin();
+    }
+  }
+);
 
 (function init(){
-  if(localStorage.getItem('citrux_theme')==='light')document.body.classList.add('light');
-  if(localStorage.getItem('citrux_compact')==='true')document.body.classList.add('compact');
-  const account=JSON.parse(localStorage.getItem('citrux_account')||'null');
+
+  if(
+    localStorage.getItem('citrux_theme')==='light'
+  ){
+    document.body.classList.add('light');
+  }
+
+  if(
+    localStorage.getItem('citrux_compact')==='true'
+  ){
+    document.body.classList.add('compact');
+  }
+
+  const account=JSON.parse(
+    localStorage.getItem('citrux_account')||'null'
+  );
+
   if(account){
     $('sideName').textContent=account.name;
-    $('sideAvatar').textContent=account.name.charAt(0).toUpperCase();
+    $('sideAvatar').textContent=
+      account.name.charAt(0).toUpperCase();
   }
+
   syncSettings();
   renderAttachments('home');
   renderAttachments('chat');
+
+  checkAuth();
+
+  renderRecent();
+
 })();
 </script>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </body>
 </html>
