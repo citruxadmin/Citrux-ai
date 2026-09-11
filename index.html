@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Citrux AI</title>
+<style>
+:root{
+  --bg:#0b0c0d;
+  --panel:#111315;
+  --panel-2:#151719;
+  --panel-3:#191b1e;
+  --border:#292c30;
+  --border-soft:#202327;
+  --text:#f4f4f2;
+  --muted:#92979d;
+  --muted-2:#656b72;
+  --yellow:#ffd42a;
+  --yellow-2:#ffbe16;
+  --green:#65b63d;
+  --orange:#ee7d21;
+  --danger:#ff6969;
+  --shadow:0 20px 60px rgba(0,0,0,.38);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 80% 0%,rgba(255,210,30,.035),transparent 25%),
+    radial-gradient(circle at 15% 100%,rgba(93,182,61,.025),transparent 24%),
+    var(--bg);
+  color:var(--text);
+  overflow:hidden;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{height:100vh;display:flex}
+
+/* SIDEBAR */
+.sidebar{
+  width:270px;
+  flex:0 0 270px;
+  border-right:1px solid var(--border-soft);
+  background:rgba(12,13,14,.92);
+  padding:25px 18px 18px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  z-index:5;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 10px 24px;
+}
+.logo-mark{
+  width:52px;height:58px;flex:0 0 52px;
+}
+.brand-name{
+  font-size:25px;
+  font-weight:700;
+  letter-spacing:7px;
+  line-height:1;
+}
+.brand-tag{
+  margin-top:7px;
+  font-size:8px;
+  letter-spacing:4px;
+  color:#e9e9e5;
+}
+.new-chat{
+  width:100%;
+  height:48px;
+  border:1px solid rgba(255,212,42,.42);
+  background:linear-gradient(135deg,#ffd72d,#e9ad16);
+  color:#151515;
+  border-radius:15px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  box-shadow:0 10px 28px rgba(255,205,28,.10);
+  transition:.2s;
+}
+.new-chat:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.nav{margin-top:22px;display:flex;flex-direction:column;gap:5px}
+.nav-btn{
+  border:0;
+  background:transparent;
+  color:#cfd2d4;
+  width:100%;
+  min-height:45px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:0 14px;
+  text-align:left;
+  transition:.18s;
+}
+.nav-btn:hover{background:#17191b;color:#fff}
+.nav-btn.active{
+  background:linear-gradient(90deg,rgba(255,210,35,.17),rgba(255,210,35,.05));
+  color:#fff;
+  border:1px solid rgba(255,212,42,.18);
+}
+.nav-icon{width:20px;text-align:center;font-size:18px}
+.sidebar-spacer{flex:1}
+.account{
+  border-top:1px solid var(--border);
+  padding:17px 7px 3px;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.avatar{
+  width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#ffe65d,#f5b911);
+  color:#171717;font-weight:800;
+}
+.account-info{min-width:0;flex:1}
+.account-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.account-plan{font-size:11px;color:var(--muted);margin-top:2px}
+.login-btn{
+  border:1px solid var(--border);
+  background:#17191b;
+  color:#eee;
+  border-radius:11px;
+  padding:8px 10px;
+}
+.login-btn:hover{border-color:#555}
+
+/* MAIN */
+.main{flex:1;min-width:0;display:flex;padding:16px 16px 16px 0}
+.workspace{
+  width:100%;height:100%;
+  border:1px solid #25282c;
+  border-radius:25px;
+  background:linear-gradient(145deg,rgba(18,20,22,.96),rgba(9,10,11,.98));
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;
+}
+.content{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  height:72px;flex:0 0 72px;
+  border-bottom:1px solid var(--border-soft);
+  display:flex;align-items:center;
+  padding:0 24px;
+  gap:12px;
+}
+.mobile-menu{display:none}
+.page-title{font-size:16px;font-weight:700}
+.page-subtitle{font-size:12px;color:var(--muted);margin-top:3px}
+.top-actions{margin-left:auto;display:flex;gap:8px}
+.icon-btn{
+  width:40px;height:40px;border-radius:12px;
+  border:1px solid var(--border);
+  background:#151719;color:#dfe1e3;
+}
+.icon-btn:hover{border-color:#4b4e52;background:#1b1d20}
+.login-top{
+  border:1px solid rgba(255,212,42,.6);
+  background:rgba(255,212,42,.07);
+  color:#fff;
+  height:40px;padding:0 16px;border-radius:13px;
+  font-weight:600;
+}
+
+/* VIEWS */
+.view{display:none;flex:1;min-height:0;overflow:auto}
+.view.active{display:flex}
+.home-view{flex-direction:column}
+.hero{
+  max-width:820px;
+  margin:auto auto 18px;
+  padding:28px 24px 0;
+  text-align:center;
+}
+.hero-logo{width:74px;height:82px;margin:0 auto 13px}
+.hero h1{font-size:36px;margin:0 0 9px;letter-spacing:-1px}
+.hero p{color:var(--muted);margin:0 auto;max-width:590px;line-height:1.6}
+.quick-grid{
+  width:min(900px,calc(100% - 48px));
+  margin:0 auto 22px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+}
+.quick{
+  min-height:92px;
+  border:1px solid var(--border);
+  background:linear-gradient(145deg,#151719,#111315);
+  color:#eee;
+  border-radius:17px;
+  padding:16px;
+  text-align:left;
+  transition:.2s;
+}
+.quick:hover{border-color:#45484c;transform:translateY(-2px)}
+.quick strong{display:block;font-size:14px;margin-bottom:6px}
+.quick span{font-size:12px;color:var(--muted);line-height:1.45}
+
+/* CHAT */
+.chat-view{flex-direction:column}
+.chat-scroll{
+  flex:1;min-height:0;overflow:auto;
+  padding:28px clamp(18px,5vw,70px) 14px;
+}
+.chat-inner{max-width:900px;margin:0 auto}
+.message{
+  display:flex;margin:0 0 18px;
+  animation:appear .18s ease;
+}
+@keyframes appear{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.message.user{justify-content:flex-end}
+.bubble{
+  max-width:min(78%,760px);
+  padding:12px 16px;
+  line-height:1.62;
+  font-size:14px;
+  white-space:pre-wrap;
+  word-break:break-word;
+  border:1px solid var(--border);
+  background:#17191c;
+  color:#f1f2f2;
+  border-radius:18px 18px 18px 6px;
+}
+.message.user .bubble{
+  background:linear-gradient(145deg,#ffe05a,#f7bd1d);
+  color:#151515;
+  border-color:#e3b321;
+  border-radius:18px 18px 6px 18px;
+  box-shadow:0 8px 22px rgba(255,200,25,.07);
+}
+.message.ai .bubble{box-shadow:0 8px 25px rgba(0,0,0,.15)}
+.typing{
+  display:none;
+  color:var(--muted);
+  font-size:12px;
+  padding:3px 4px 15px;
+}
+.typing.show{display:block}
+
+/* ATTACHMENTS */
+.composer-wrap-inner{max-width:900px;margin:0 auto}
+.attachments{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin:0 0 8px;
+}
+.attachment-chip{
+  display:flex;align-items:center;gap:8px;
+  max-width:240px;padding:7px 9px;
+  border:1px solid #30343a;background:#17191c;
+  border-radius:12px;color:#dfe2e5;font-size:11px;
+}
+.attachment-chip img{
+  width:34px;height:34px;object-fit:cover;border-radius:8px;
+}
+.attachment-name{
+  min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.attachment-remove{
+  width:24px;height:24px;border:0;border-radius:8px;
+  background:#26292d;color:#c8ccd0;font-weight:700;
+}
+.attachment-remove:hover{background:#35393e;color:#fff}
+
+/* COMPOSER - deliberately NO yellow focus outline */
+.composer-wrap{
+  padding:10px clamp(18px,5vw,70px) 10px;
+}
+.composer{
+  max-width:900px;margin:0 auto;
+  min-height:64px;
+  border:1px solid #30343a;
+  background:linear-gradient(145deg,#15181b,#101214);
+  border-radius:22px;
+  display:flex;
+  align-items:flex-end;
+  gap:9px;
+  padding:10px 10px 10px 16px;
+  box-shadow:0 14px 35px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025);
+  transition:border-color .2s,background .2s;
+}
+.composer:focus-within{
+  border-color:#3a3f45;
+  background:linear-gradient(145deg,#171a1d,#111315);
+  box-shadow:0 14px 35px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.03);
+}
+textarea{
+  flex:1;resize:none;outline:none;border:0;
+  background:transparent;color:#f5f5f4;
+  min-height:42px;max-height:150px;
+  padding:10px 4px;
+  line-height:1.5;
+}
+textarea::placeholder{color:#6f757c}
+.attach{
+  width:42px;height:42px;border:0;background:transparent;color:#b8bdc2;
+  border-radius:12px;font-size:20px;
+}
+.attach:hover{background:#202327;color:#fff}
+.send{
+  width:44px;height:44px;border:0;border-radius:14px;
+  background:linear-gradient(145deg,#ffe04e,#f4b917);
+  color:#171717;font-size:18px;font-weight:900;
+  box-shadow:0 7px 20px rgba(255,201,27,.13);
+}
+.send:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.secure{
+  text-align:center;color:#666c72;font-size:10px;
+  padding:5px 0 4px;letter-spacing:.2px;
+}
+
+/* GENERIC PAGES */
+.page{
+  padding:34px clamp(22px,5vw,70px);
+  width:100%;
+}
+.page-head{max-width:850px;margin:0 auto 24px}
+.page-head h2{margin:0 0 7px;font-size:28px}
+.page-head p{margin:0;color:var(--muted);line-height:1.55}
+.card-grid{max-width:850px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{
+  border:1px solid var(--border);background:linear-gradient(145deg,#151719,#111315);
+  border-radius:18px;padding:19px;
+}
+.card h3{font-size:15px;margin:0 0 7px}
+.card p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}
+.card button{
+  margin-top:14px;border:1px solid #383c41;background:#1a1c1f;
+  color:#eee;border-radius:10px;padding:9px 12px;
+}
+.card button:hover{border-color:#666}
+.search-box{
+  width:100%;max-width:850px;margin:0 auto 16px;
+  border:1px solid var(--border);background:#131517;border-radius:14px;
+  padding:13px 15px;color:#fff;outline:none;
+}
+.search-box:focus{border-color:#4a4f55}
+.empty{
+  max-width:850px;margin:35px auto;text-align:center;color:var(--muted);
+  border:1px dashed #30343a;border-radius:18px;padding:35px 20px;
+}
+.setting{
+  max-width:850px;margin:0 auto 10px;
+  border:1px solid var(--border);background:#131517;border-radius:16px;
+  padding:17px;display:flex;align-items:center;gap:15px;
+}
+.setting-main{flex:1}
+.setting-title{font-size:14px;font-weight:700}
+.setting-desc{font-size:12px;color:var(--muted);margin-top:4px}
+.switch{
+  width:48px;height:27px;border:0;border-radius:20px;background:#35393e;padding:3px;
+}
+.switch i{display:block;width:21px;height:21px;border-radius:50%;background:#d9dcdf;transition:.2s}
+.switch.on{background:#d9ad20}
+.switch.on i{transform:translateX(21px);background:#fff}
+.danger{border-color:rgba(255,90,90,.25)!important;color:#ff9292!important}
+
+/* MODAL */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.67);
+  display:none;align-items:center;justify-content:center;
+  z-index:20;padding:20px;
+}
+.modal.show{display:flex}
+.modal-box{
+  width:min(430px,100%);background:#151719;border:1px solid #34383d;
+  border-radius:22px;padding:24px;box-shadow:0 30px 90px rgba(0,0,0,.55);
+}
+.modal-box h2{margin:0 0 6px}
+.modal-box p{color:var(--muted);font-size:13px;margin:0 0 18px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:#bfc3c7;margin-bottom:6px}
+.field input{
+  width:100%;border:1px solid #30343a;background:#0f1113;color:#fff;
+  border-radius:12px;padding:12px;outline:none;
+}
+.field input:focus{border-color:#555a60}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.modal-actions button{border:1px solid #373b40;background:#1b1e21;color:#eee;border-radius:11px;padding:10px 14px}
+.modal-actions .primary{background:linear-gradient(145deg,#ffe04b,#f4b817);border-color:#d9ae20;color:#171717;font-weight:700}
+
+/* LIGHT MODE */
+body.light{
+  --bg:#f5f2e9;--panel:#fffdf8;--panel-2:#fff;--panel-3:#f4f1e9;
+  --border:#ddd8ca;--border-soft:#e6e1d5;--text:#202124;--muted:#73716c;--muted-2:#8b8880;
+}
+body.light{background:#f5f2e9}
+body.light .sidebar{background:#fbf8f0}
+body.light .workspace{background:#fffdf8;border-color:#ddd8ca}
+body.light .topbar{background:#fffdf8}
+body.light .nav-btn{color:#4f504d}
+body.light .nav-btn:hover{background:#eeeade;color:#222}
+body.light .nav-btn.active{background:#f4e7a8;color:#222}
+body.light .bubble{background:#f0eee8;color:#222;border-color:#ddd8ca}
+body.light .composer{background:#f4f2ed;border-color:#d5d0c5;box-shadow:0 12px 30px rgba(50,45,30,.08)}
+body.light textarea{color:#222}
+body.light .card,body.light .quick,body.light .setting{background:#fffdf8}
+body.light .search-box{background:#fff;color:#222}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  .sidebar{width:230px;flex-basis:230px}
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:760px){
+  body{overflow:auto}
+  .sidebar{
+    position:fixed;left:-280px;top:0;bottom:0;width:270px;
+    transition:left .25s;box-shadow:20px 0 50px rgba(0,0,0,.4);
+  }
+  .sidebar.open{left:0}
+  .main{padding:0;min-height:100vh}
+  .workspace{border-radius:0;border:0;min-height:100vh}
+  .mobile-menu{display:block}
+  .hero h1{font-size:29px}
+  .quick-grid{width:calc(100% - 30px)}
+  .card-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .quick-grid{grid-template-columns:1fr}
+  .topbar{padding:0 14px}
+  .composer-wrap{padding-left:10px;padding-right:10px}
+  .chat-scroll{padding-left:10px;padding-right:10px}
+  .bubble{max-width:88%}
+}
+
+/* COMPACT */
+body.compact .chat-scroll{padding-top:15px}
+body.compact .message{margin-bottom:9px}
+body.compact .bubble{padding:9px 13px}
+body.compact .composer{min-height:56px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <svg class="logo-mark" viewBox="0 0 80 90" aria-label="Citrus logo">
+      <path d="M28 25C19 18 18 9 20 2c10 5 17 12 15 23" fill="#68b844"/>
+      <path d="M17 29C8 25 3 18 1 13c9-1 18 3 22 11" fill="#68b844"/>
+      <path d="M25 30C33 19 45 17 57 20c-4 12-13 19-28 18" fill="#ee7d21"/>
+      <circle cx="40" cy="53" r="31" fill="#e87820"/>
+      <circle cx="40" cy="53" r="25" fill="#111315" stroke="#f4a323" stroke-width="3"/>
+      <path d="M40 30v46M17 53h46M24 37l32 32M56 37L24 69" stroke="#ffd52d" stroke-width="4"/>
+      <circle cx="40" cy="53" r="5" fill="#ffd52d"/>
+      <path d="M17 68c7 12 20 19 34 17 12-2 21-11 25-23-9 6-17 9-28 10-11 1-20-2-31-4z" fill="#e87820" opacity=".9"/>
+    </svg>
+    <div>
+      <div class="brand-name">Citrus</div>
+      <div class="brand-tag">AI ASSISTANT</div>
+    </div>
+  </div>
+
+  <button class="new-chat" onclick="newChat()">＋ New Chat</button>
+
+  <nav class="nav">
+    <button class="nav-btn active" data-view="home" onclick="showView('home')"><span class="nav-icon">◉</span> Chat</button>
+    <button class="nav-btn" data-view="recent" onclick="showView('recent')"><span class="nav-icon">◷</span> Recent Chats</button>
+    <button class="nav-btn" data-view="library" onclick="showView('library')"><span class="nav-icon">▤</span> Library</button>
+    <button class="nav-btn" data-view="projects" onclick="showView('projects')"><span class="nav-icon">□</span> Projects</button>
+    <button class="nav-btn" data-view="explore" onclick="showView('explore')"><span class="nav-icon">✦</span> Explore</button>
+    <button class="nav-btn" data-view="settings" onclick="showView('settings')"><span class="nav-icon">⚙</span> Settings</button>
+  </nav>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="account">
+    <div class="avatar" id="sideAvatar">G</div>
+    <div class="account-info">
+      <div class="account-name" id="sideName">Guest User</div>
+      <div class="account-plan">Free Plan</div>
+    </div>
+    <button class="login-btn" onclick="openLogin()">Log in</button>
+  </div>
+</aside>
+
+<main class="main">
+<div class="workspace">
+<div class="content">
+
+<header class="topbar">
+  <button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button>
+  <div>
+    <div class="page-title" id="topTitle">New Chat</div>
+    <div class="page-subtitle" id="topSubtitle">Start a new conversation with Citrux</div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">☼</button>
+    <button class="login-top" onclick="openLogin()">♙ &nbsp; Log in</button>
+  </div>
+</header>
+
+<!-- HOME -->
+<section class="view active home-view" id="view-home">
+  <div class="hero" id="hero">
+    <svg class="hero-logo" viewBox="0 0 80 90">
+      <path d="M28 25C19 18 18 9 20 2c10 5 17 12 15 23" fill="#68b844"/>
+      <path d="M17 29C8 25 3 18 1 13c9-1 18 3 22 11" fill="#68b844"/>
+      <path d="M25 30C33 19 45 17 57 20c-4 12-13 19-28 18" fill="#ee7d21"/>
+      <circle cx="40" cy="53" r="31" fill="#e87820"/>
+      <circle cx="40" cy="53" r="25" fill="#111315" stroke="#f4a323" stroke-width="3"/>
+      <path d="M40 30v46M17 53h46M24 37l32 32M56 37L24 69" stroke="#ffd52d" stroke-width="4"/>
+      <circle cx="40" cy="53" r="5" fill="#ffd52d"/>
+    </svg>
+    <h1>What can I help you with?</h1>
+    <p>Welcome to Citrux — a clean, fast AI workspace for ideas, learning, writing, coding and everyday questions.</p>
+  </div>
+
+  <div class="quick-grid" id="quickGrid">
+    <button class="quick" onclick="usePrompt('Give me 5 creative ideas for a professional website project.')">
+      <strong>💡 Ideas</strong><span>Brainstorm projects and creative concepts.</span>
+    </button>
+    <button class="quick" onclick="usePrompt('Explain a difficult topic to me in simple words.')">
+      <strong>📚 Learn</strong><span>Understand complex topics step by step.</span>
+    </button>
+    <button class="quick" onclick="usePrompt('Help me write a professional LinkedIn post about an AI project.')">
+      <strong>✍ Writing</strong><span>Create polished professional content.</span>
+    </button>
+    <button class="quick" onclick="usePrompt('Help me debug this code and explain the fix clearly.')">
+      <strong>⌘ Coding</strong><span>Build, debug and understand code.</span>
+    </button>
+  </div>
+
+  <div id="homeChat" style="display:none;flex:1;min-height:0;flex-direction:column">
+    <div class="chat-scroll"><div class="chat-inner" id="chatHome"></div><div class="typing" id="typingHome">Citrux is thinking…</div></div>
+  </div>
+
+  <div class="composer-wrap">
+    <div class="composer-wrap-inner">
+      <div class="attachments" id="attachmentsHome"></div>
+      <div class="composer">
+        <input id="fileInputHome" type="file" multiple
+          accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+          style="display:none" onchange="handleFiles(this.files,'home')">
+        <button class="attach" onclick="openFilePicker('home')" title="Add photos & files" aria-label="Add photos and files">＋</button>
+        <textarea id="textarea" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
+        <button class="send" onclick="sendMessage('textarea')" title="Send">➤</button>
+      </div>
+    </div>
+    <div class="secure">Citrux AI • Your conversations stay on your device unless sent to the AI service</div>
+  </div>
+</section>
+
+<!-- CHAT -->
+<section class="view chat-view" id="view-chat">
+  <div class="chat-scroll"><div class="chat-inner" id="chat"></div><div class="typing" id="typing">Citrux is thinking…</div></div>
+  <div class="composer-wrap">
+    <div class="composer-wrap-inner">
+      <div class="attachments" id="attachmentsChat"></div>
+      <div class="composer">
+        <input id="fileInputChat" type="file" multiple
+          accept="image/*,.pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+          style="display:none" onchange="handleFiles(this.files,'chat')">
+        <button class="attach" onclick="openFilePicker('chat')" title="Add photos & files" aria-label="Add photos and files">＋</button>
+        <textarea id="textareaChat" rows="1" placeholder="Message Citrux..." maxlength="10000"></textarea>
+        <button class="send" onclick="sendMessage('textareaChat')" title="Send">➤</button>
+      </div>
+    </div>
+    <div class="secure">Citrux AI • Secure conversation</div>
+  </div>
+</section>
+
+<!-- RECENT -->
+<section class="view" id="view-recent">
+  <div class="page">
+    <div class="page-head"><h2>Recent Chats</h2><p>Open conversations saved in this browser.</p></div>
+    <input class="search-box" id="recentSearch" placeholder="Search recent chats..." oninput="renderRecent()">
+    <div id="recentList"></div>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section class="view" id="view-library">
+  <div class="page">
+    <div class="page-head"><h2>Library</h2><p>Keep useful notes, ideas and saved resources in one place.</p></div>
+    <div class="card-grid" id="libraryList"></div>
+    <div class="empty" id="libraryEmpty" style="display:none">Your library is empty.<br><button onclick="addLibrary()">＋ Add a note</button></div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="view" id="view-projects">
+  <div class="page">
+    <div class="page-head"><h2>Projects</h2><p>Organize your AI work into simple local project spaces.</p></div>
+    <div class="card-grid" id="projectList"></div>
+    <div class="empty" id="projectEmpty" style="display:none">No projects yet.<br><button onclick="addProject()">＋ Create a project</button></div>
+  </div>
+</section>
+
+<!-- EXPLORE -->
+<section class="view" id="view-explore">
+  <div class="page">
+    <div class="page-head"><h2>Explore</h2><p>Jump into useful prompts and workflows.</p></div>
+    <div class="card-grid">
+      <div class="card"><h3>🚀 Website Builder</h3><p>Generate a professional website plan, layout, content and development checklist.</p><button onclick="usePrompt('Create a complete professional website plan for an IT company.')">Try prompt</button></div>
+      <div class="card"><h3>💼 Career Assistant</h3><p>Improve resumes, LinkedIn content, interview answers and project descriptions.</p><button onclick="usePrompt('Help me improve my professional profile for an IT career.')">Try prompt</button></div>
+      <div class="card"><h3>🧠 Study Coach</h3><p>Turn difficult subjects into simple explanations and practical study plans.</p><button onclick="usePrompt('Teach me a difficult topic using simple examples and a step-by-step plan.')">Try prompt</button></div>
+      <div class="card"><h3>💻 Code Helper</h3><p>Ask for explanations, debugging help, architecture suggestions and examples.</p><button onclick="usePrompt('Act as my coding mentor and help me build a clean web project.')">Try prompt</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="view" id="view-settings">
+  <div class="page">
+    <div class="page-head"><h2>Settings</h2><p>Control how Citrux behaves in this browser.</p></div>
+    <div class="setting">
+      <div class="setting-main"><div class="setting-title">Dark mode</div><div class="setting-desc">Use Citrux's dark premium interface.</div></div>
+      <button class="switch on" id="darkSwitch" onclick="toggleTheme()"><i></i></button>
+    </div>
+    <div class="setting">
+      <div class="setting-main"><div class="setting-title">Save recent chats</div><div class="setting-desc">Keep recent conversations in local browser storage.</div></div>
+      <button class="switch on" id="saveSwitch" onclick="toggleSave()"><i></i></button>
+    </div>
+    <div class="setting">
+      <div class="setting-main"><div class="setting-title">Compact interface</div><div class="setting-desc">Reduce message and spacing sizes.</div></div>
+      <button class="switch" id="compactSwitch" onclick="toggleCompact()"><i></i></button>
+    </div>
+    <div class="setting">
+      <div class="setting-main"><div class="setting-title">Clear local data</div><div class="setting-desc">Remove saved chats, library items, projects and local account data.</div></div>
+      <button class="card button danger" onclick="clearData()">Clear data</button>
+    </div>
+  </div>
+</section>
+
+</div>
+</div>
+</main>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal" id="loginModal">
+  <div class="modal-box">
+    <h2>Welcome to Citrux</h2>
+    <p>This is a local demo login for the interface. It does not create a real online account.</p>
+    <div class="field"><label>Name</label><input id="loginName" placeholder="Your name"></div>
+    <div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="you@example.com"></div>
+    <div class="modal-actions">
+      <button onclick="closeLogin()">Cancel</button>
+      <button class="primary" onclick="saveLogin()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let currentMessages = [];
+let pendingAttachments = {home:[],chat:[]};
+let saveChats = localStorage.getItem('citrux_save_chats') !== 'false';
+
+const titles = {
+  home:['New Chat','Start a new conversation with Citrux'],
+  chat:['Conversation','Chat with Citrux'],
+  recent:['Recent Chats','Your saved conversations'],
+  library:['Library','Your saved resources'],
+  projects:['Projects','Organize your work'],
+  explore:['Explore','Discover useful Citrux workflows'],
+  settings:['Settings','Customize your Citrux experience']
+};
+
+function escapeHTML(str){
+  return String(str).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const target = $('view-'+name);
+  if(target) target.classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+  $('topTitle').textContent = titles[name]?.[0] || 'Citrux';
+  $('topSubtitle').textContent = titles[name]?.[1] || 'Citrux AI';
+  if(name==='recent') renderRecent();
+  if(name==='library') renderLibrary();
+  if(name==='projects') renderProjects();
+  if(name==='settings') syncSettings();
+  if(window.innerWidth<=760) $('sidebar').classList.remove('open');
+}
+
+function toggleSidebar(){ $('sidebar').classList.toggle('open'); }
+
+function newChat(){
+  currentMessages=[];
+  pendingAttachments={home:[],chat:[]};
+  renderAttachments('home');
+  renderAttachments('chat');
+  $('chat').innerHTML='';
+  $('homeChat').style.display='none';
+  $('hero').style.display='block';
+  $('quickGrid').style.display='grid';
+  $('textarea').value='';
+  $('textareaChat').value='';
+  showView('home');
+  $('textarea').focus();
+}
+
+function usePrompt(text){
+  showView('home');
+  $('hero').style.display='none';
+  $('quickGrid').style.display='none';
+  $('homeChat').style.display='flex';
+  $('textarea').value=text;
+  sendMessage('textarea');
+}
+
+function addBubble(target,role,text){
+  const row=document.createElement('div');
+  row.className='message '+role;
+  const bubble=document.createElement('div');
+  bubble.className='bubble';
+  bubble.innerHTML=escapeHTML(text);
+  row.appendChild(bubble);
+  $(target).appendChild(row);
+  const sc=$(target).closest('.chat-scroll');
+  if(sc) sc.scrollTop=sc.scrollHeight;
+}
+
+async function sendMessage(inputId='textarea'){
+  const input=$(inputId);
+  const area=inputId==='textarea'?'home':'chat';
+  const text=input.value.trim();
+  const files=pendingAttachments[area]||[];
+
+  if(!text && !files.length) return;
+
+  if(inputId==='textarea'){
+    $('hero').style.display='none';
+    $('quickGrid').style.display='none';
+    $('homeChat').style.display='flex';
+  }
+
+  showView('home');
+  input.value='';
+  input.style.height='42px';
+
+  const target='chatHome';
+
+  if(text) {
+    addBubble(target,'user',text);
+    currentMessages.push({role:'user',content:text});
+  }
+
+  if(files.length){
+    const names=files.map(f=>`📎 ${f.name}`).join('\n');
+    addBubble(target,'user',names);
+  }
+
+  const outgoingMessages=currentMessages.slice(-20);
+
+  $('typing').style.display='block'; $('typingHome').style.display='block';
+
+  try{
+    const attachments=await Promise.all(files.map(async file=>({
+      name:file.name,
+      type:file.type || 'application/octet-stream',
+      size:file.size,
+      dataUrl:await fileToDataUrl(file)
+    })));
+
+    const response=await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        messages:outgoingMessages,
+        attachments
+      })
+    });
+
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.error || 'Server error');
+
+    const reply=data.reply || 'I received your message, but no response was returned.';
+    addBubble(target,'ai',reply);
+    currentMessages.push({role:'assistant',content:reply});
+
+    if(text) saveCurrentChat(text);
+    else if(files.length) saveCurrentChat(files[0].name);
+
+    pendingAttachments[area]=[];
+    renderAttachments(area);
+
+    const fileInput=$('fileInput'+(area==='home'?'Home':'Chat'));
+    if(fileInput) fileInput.value='';
+
+  }catch(error){
+    console.error(error);
+    addBubble(target,'ai',
+      'Sorry, I couldn’t connect to Citrux AI right now. Please make sure the Citrux server is running at http://localhost:3000.'
+    );
+  }finally{
+    $('typing').style.display='none'; $('typingHome').style.display='none';
+  }
+}
+
+function openFilePicker(area){
+  const input=$('fileInput'+(area==='home'?'Home':'Chat'));
+  if(input) input.click();
+}
+
+function fileToDataUrl(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(reader.error || new Error('Could not read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function handleFiles(fileList,area='home'){
+  const incoming=Array.from(fileList||[]);
+  if(!incoming.length) return;
+
+  const current=pendingAttachments[area]||[];
+  const maxFiles=10;
+  const maxSize=20*1024*1024;
+
+  for(const file of incoming){
+    if(current.length>=maxFiles){
+      alert('You can attach up to 10 files at a time.');
+      break;
+    }
+    if(file.size>maxSize){
+      alert(`${file.name} is larger than 20 MB and was not added.`);
+      continue;
+    }
+    current.push(file);
+  }
+
+  pendingAttachments[area]=current;
+  renderAttachments(area);
+
+  const input=$('fileInput'+(area==='home'?'Home':'Chat'));
+  if(input) input.value='';
+}
+
+function renderAttachments(area='home'){
+  const container=$('attachments'+(area==='home'?'Home':'Chat'));
+  if(!container) return;
+
+  const files=pendingAttachments[area]||[];
+  container.innerHTML='';
+
+  files.forEach((file,index)=>{
+    const chip=document.createElement('div');
+    chip.className='attachment-chip';
+
+    if(file.type.startsWith('image/')){
+      const img=document.createElement('img');
+      img.src=URL.createObjectURL(file);
+      img.alt=file.name;
+      chip.appendChild(img);
+    }else{
+      const icon=document.createElement('span');
+      icon.textContent='📎';
+      icon.style.fontSize='20px';
+      chip.appendChild(icon);
+    }
+
+    const name=document.createElement('span');
+    name.className='attachment-name';
+    name.textContent=file.name;
+    chip.appendChild(name);
+
+    const remove=document.createElement('button');
+    remove.className='attachment-remove';
+    remove.type='button';
+    remove.textContent='×';
+    remove.title='Remove attachment';
+    remove.onclick=()=>{
+      pendingAttachments[area].splice(index,1);
+      renderAttachments(area);
+    };
+    chip.appendChild(remove);
+
+    container.appendChild(chip);
+  });
+}
+
+
+function saveCurrentChat(firstMessage){
+  if(!saveChats || !currentMessages.length) return;
+  const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]');
+  const title=firstMessage.length>42?firstMessage.slice(0,42)+'…':firstMessage;
+  chats.unshift({
+    id:Date.now(),
+    title,
+    preview:currentMessages.at(-1)?.content?.slice(0,75)||'',
+    messages:currentMessages,
+    time:new Date().toLocaleString()
+  });
+  localStorage.setItem('citrux_chats',JSON.stringify(chats.slice(0,30)));
+}
+
+function renderRecent(){
+  const list=$('recentList');
+  const q=($('recentSearch').value||'').toLowerCase();
+  const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]').filter(c=>(c.title+c.preview).toLowerCase().includes(q));
+  if(!chats.length){
+    list.innerHTML='<div class="empty">No recent chats found.</div>';
+    return;
+  }
+  list.innerHTML=chats.map(c=>`
+    <div class="card" style="margin-bottom:10px;cursor:pointer" onclick="openChat(${c.id})">
+      <h3>💬 ${escapeHTML(c.title)}</h3>
+      <p>${escapeHTML(c.preview)}<br><small>${escapeHTML(c.time)}</small></p>
+    </div>`).join('');
+}
+
+function openChat(id){
+  const chats=JSON.parse(localStorage.getItem('citrux_chats')||'[]');
+  const item=chats.find(c=>c.id===id);
+  if(!item)return;
+  currentMessages=item.messages||[];
+  $('hero').style.display='none';
+  $('quickGrid').style.display='none';
+  $('homeChat').style.display='flex';
+  $('chatHome').innerHTML='';
+  currentMessages.forEach(m=>addBubble('chatHome',m.role==='user'?'user':'ai',m.content));
+  showView('home');
+}
+
+function addLibrary(){
+  const title=prompt('Library note title:');
+  if(!title)return;
+  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]');
+  items.unshift({id:Date.now(),title,body:'Saved locally in your Citrux Library.'});
+  localStorage.setItem('citrux_library',JSON.stringify(items));
+  renderLibrary();
+}
+function renderLibrary(){
+  const list=$('libraryList'), empty=$('libraryEmpty');
+  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]');
+  list.innerHTML=items.map(x=>`<div class="card"><h3>▤ ${escapeHTML(x.title)}</h3><p>${escapeHTML(x.body)}</p><button onclick="deleteLibrary(${x.id})">Remove</button></div>`).join('');
+  empty.style.display=items.length?'none':'block';
+}
+function deleteLibrary(id){
+  const items=JSON.parse(localStorage.getItem('citrux_library')||'[]').filter(x=>x.id!==id);
+  localStorage.setItem('citrux_library',JSON.stringify(items)); renderLibrary();
+}
+
+function addProject(){
+  const title=prompt('Project name:');
+  if(!title)return;
+  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]');
+  items.unshift({id:Date.now(),title});
+  localStorage.setItem('citrux_projects',JSON.stringify(items)); renderProjects();
+}
+function renderProjects(){
+  const list=$('projectList'), empty=$('projectEmpty');
+  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]');
+  list.innerHTML=items.map(x=>`<div class="card"><h3>□ ${escapeHTML(x.title)}</h3><p>A local Citrux project workspace.</p><button onclick="deleteProject(${x.id})">Remove</button></div>`).join('');
+  empty.style.display=items.length?'none':'block';
+}
+function deleteProject(id){
+  const items=JSON.parse(localStorage.getItem('citrux_projects')||'[]').filter(x=>x.id!==id);
+  localStorage.setItem('citrux_projects',JSON.stringify(items)); renderProjects();
+}
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  const light=document.body.classList.contains('light');
+  localStorage.setItem('citrux_theme',light?'light':'dark');
+  syncSettings();
+}
+function toggleSave(){
+  saveChats=!saveChats;
+  localStorage.setItem('citrux_save_chats',saveChats);
+  syncSettings();
+}
+function toggleCompact(){
+  document.body.classList.toggle('compact');
+  localStorage.setItem('citrux_compact',document.body.classList.contains('compact'));
+  syncSettings();
+}
+function syncSettings(){
+  const light=document.body.classList.contains('light');
+  $('darkSwitch').classList.toggle('on',!light);
+  $('saveSwitch').classList.toggle('on',saveChats);
+  $('compactSwitch').classList.toggle('on',document.body.classList.contains('compact'));
+}
+function clearData(){
+  if(!confirm('Clear all Citrux local data?'))return;
+  ['citrux_chats','citrux_library','citrux_projects','citrux_account'].forEach(k=>localStorage.removeItem(k));
+  saveChats=true;
+  localStorage.setItem('citrux_save_chats','true');
+  $('sideName').textContent='Guest User';
+  $('sideAvatar').textContent='G';
+  renderRecent();renderLibrary();renderProjects();syncSettings();
+  alert('Local Citrux data cleared.');
+}
+
+function openLogin(){
+  const account=JSON.parse(localStorage.getItem('citrux_account')||'null');
+  if(account){
+    $('loginName').value=account.name||'';
+    $('loginEmail').value=account.email||'';
+  }
+  $('loginModal').classList.add('show');
+}
+function closeLogin(){ $('loginModal').classList.remove('show'); }
+function saveLogin(){
+  const name=$('loginName').value.trim()||'Citrux User';
+  const email=$('loginEmail').value.trim();
+  if(!email){alert('Please enter an email address.');return}
+  localStorage.setItem('citrux_account',JSON.stringify({name,email}));
+  $('sideName').textContent=name;
+  $('sideAvatar').textContent=name.charAt(0).toUpperCase();
+  closeLogin();
+}
+
+function autoGrow(el){
+  el.style.height='auto';
+  el.style.height=Math.min(el.scrollHeight,150)+'px';
+}
+$('textarea').addEventListener('input',e=>autoGrow(e.target));
+$('textareaChat').addEventListener('input',e=>autoGrow(e.target));
+$('textarea').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage('textarea')}
+});
+$('textareaChat').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage('textareaChat')}
+});
+$('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin()});
+
+(function init(){
+  if(localStorage.getItem('citrux_theme')==='light')document.body.classList.add('light');
+  if(localStorage.getItem('citrux_compact')==='true')document.body.classList.add('compact');
+  const account=JSON.parse(localStorage.getItem('citrux_account')||'null');
+  if(account){
+    $('sideName').textContent=account.name;
+    $('sideAvatar').textContent=account.name.charAt(0).toUpperCase();
+  }
+  syncSettings();
+  renderAttachments('home');
+  renderAttachments('chat');
+})();
+</script>
+</body>
+</html>
