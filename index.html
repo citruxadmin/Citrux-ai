@@ -436,7 +436,35 @@ body.compact .chat-scroll{padding-top:15px}
 body.compact .message{margin-bottom:9px}
 body.compact .bubble{padding:9px 13px}
 body.compact .composer{min-height:56px}
+
+.markdown-content{line-height:1.65}
+.markdown-content p{margin:0 0 10px}
+.markdown-content p:last-child{margin-bottom:0}
+.markdown-content strong{font-weight:800}
+.markdown-content em{font-style:italic}
+.markdown-content h1,.markdown-content h2,.markdown-content h3{margin:12px 0 8px;line-height:1.25}
+.markdown-content ul,.markdown-content ol{margin:8px 0 10px 22px;padding:0}
+.markdown-content li{margin:4px 0}
+.markdown-content blockquote{margin:10px 0;padding:8px 12px;border-left:3px solid rgba(255,180,40,.55);background:rgba(255,255,255,.035);border-radius:8px}
+.markdown-content code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;padding:2px 6px;border-radius:6px;background:rgba(255,255,255,.08)}
+.markdown-content pre{margin:10px 0;padding:12px 14px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:#0b0b0b}
+.markdown-content pre code{padding:0;background:transparent}
+.markdown-content a{color:#ffc94a;text-decoration:underline}
+body.light .markdown-content pre{background:#eee}
+body.light .markdown-content blockquote{background:rgba(0,0,0,.035)}
 </style>
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)'], ['$', '$']],
+    displayMath: [['\\[', '\\]'], ['$$', '$$']],
+    processEscapes: true
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div class="app">
@@ -711,14 +739,50 @@ function usePrompt(text){
   sendMessage('textarea');
 }
 
+function renderMarkdown(text){
+  let src=String(text ?? '').replace(/\r\n?/g,'\n');
+  const codeBlocks=[];
+  src=src.replace(/```(?:[a-zA-Z0-9_+-]+)?\n?([\s\S]*?)```/g,(_,code)=>{
+    const token=`@@CODEBLOCK${codeBlocks.length}@@`;
+    codeBlocks.push(`<pre><code>${escapeHTML(code.replace(/\n$/,''))}</code></pre>`);
+    return token;
+  });
+
+  let html=escapeHTML(src);
+  html=html.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  html=html.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  html=html.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  html=html.replace(/^> (.+)$/gm,'<blockquote>$1</blockquote>');
+  html=html.replace(/^(?:[-*]) (.+)$/gm,'<li>$1</li>');
+  html=html.replace(/^(\d+)\. (.+)$/gm,'<li data-ordered="$1">$2</li>');
+  html=html.replace(/(<li>.*<\/li>(?:\n|$))+/g,m=>`<ul>${m.replace(/\n/g,'')}</ul>`);
+  html=html.replace(/(<li data-ordered="\d+">.*<\/li>(?:\n|$))+/g,m=>`<ol>${m.replace(/ data-ordered="\d+"/g,'').replace(/\n/g,'')}</ol>`);
+  html=html.replace(/`([^`\n]+)`/g,'<code>$1</code>');
+  html=html.replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>');
+  html=html.replace(/__([^_\n]+)__/g,'<strong>$1</strong>');
+  html=html.replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>');
+  html=html.replace(/(?<!_)_([^_\n]+)_(?!_)/g,'<em>$1</em>');
+  html=html.replace(/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  html=html.replace(/\n{2,}/g,'</p><p>');
+  html=html.replace(/(?<!>)\n(?!<)/g,'<br>');
+  html=`<div class="markdown-content"><p>${html}</p></div>`;
+  html=html.replace(/<p>(<h[1-3]>)/g,'$1').replace(/(<\/h[1-3]>)<\/p>/g,'$1');
+  html=html.replace(/<p>(<ul>|<ol>|<blockquote>|<pre>)/g,'$1').replace(/(<\/ul>|<\/ol>|<\/blockquote>|<\/pre>)<\/p>/g,'$1');
+  codeBlocks.forEach((block,i)=>{ html=html.replace(`@@CODEBLOCK${i}@@`,block); });
+  return html;
+}
+
 function addBubble(target,role,text){
   const row=document.createElement('div');
   row.className='message '+role;
   const bubble=document.createElement('div');
   bubble.className='bubble';
-  bubble.innerHTML=escapeHTML(text);
+  bubble.innerHTML=role==='ai' ? renderMarkdown(text) : escapeHTML(text);
   row.appendChild(bubble);
   $(target).appendChild(row);
+  if(role==='ai' && window.MathJax?.typesetPromise){
+    window.MathJax.typesetPromise([bubble]).catch(()=>{});
+  }
   const sc=$(target).closest('.chat-scroll');
   if(sc) sc.scrollTop=sc.scrollHeight;
 }
@@ -751,6 +815,12 @@ async function sendMessage(inputId='textarea'){
   if(files.length){
     const names=files.map(f=>`📎 ${f.name}`).join('\n');
     addBubble(target,'user',names);
+
+    // The files are now part of the sent message, so remove the composer previews immediately.
+    pendingAttachments[area]=[];
+    renderAttachments(area);
+    const fileInput=$('fileInput'+(area==='home'?'Home':'Chat'));
+    if(fileInput) fileInput.value='';
   }
 
   const outgoingMessages=currentMessages.slice(-20);
@@ -783,12 +853,6 @@ async function sendMessage(inputId='textarea'){
 
     if(text) saveCurrentChat(text);
     else if(files.length) saveCurrentChat(files[0].name);
-
-    pendingAttachments[area]=[];
-    renderAttachments(area);
-
-    const fileInput=$('fileInput'+(area==='home'?'Home':'Chat'));
-    if(fileInput) fileInput.value='';
 
   }catch(error){
     console.error(error);
