@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import OpenAI, { toFile } from "openai";
+import { GoogleGenAI } from "@google/genai";
 import path from "path";
 import { fileURLToPath } from "url";
 import rateLimit from "express-rate-limit";
@@ -9,28 +9,29 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = process.env.OPENAI_API_KEY;
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.6-luna";
 
-if (!API_KEY) {
-  console.error("OPENAI_API_KEY is missing.");
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
+
+if (!GEMINI_API_KEY) {
+  console.error("GEMINI_API_KEY is missing.");
   process.exit(1);
 }
 
-const client = new OpenAI({
-  apiKey: API_KEY
+const ai = new GoogleGenAI({
+  apiKey: GEMINI_API_KEY
 });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Render runs behind a proxy.
-// This allows Express to correctly identify visitors by IP.
 app.set("trust proxy", 1);
 
-app.use(express.json({
-  limit: "35mb"
-}));
+app.use(
+  express.json({
+    limit: "35mb"
+  })
+);
 
 app.use(express.static(__dirname));
 
@@ -50,15 +51,12 @@ const limiter = rateLimit({
 });
 
 // --------------------------------------------------
-// CITRUX FREE DAILY MESSAGE LIMIT
+// CITRUX DAILY MESSAGE LIMIT
 // 100 messages per user per day
 // --------------------------------------------------
 
 const DAILY_MESSAGE_LIMIT = 100;
 
-// Temporary in-memory usage storage.
-// This is suitable for the current prototype.
-// Later we can move this to a database.
 const dailyUsage = new Map();
 
 function getUserId(req) {
@@ -73,7 +71,6 @@ function getDailyUsage(userId) {
   const today = getToday();
   const existing = dailyUsage.get(userId);
 
-  // Start a new daily counter
   if (!existing || existing.date !== today) {
     const usage = {
       date: today,
@@ -81,6 +78,7 @@ function getDailyUsage(userId) {
     };
 
     dailyUsage.set(userId, usage);
+
     return usage;
   }
 
@@ -94,28 +92,10 @@ function getDailyUsage(userId) {
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    message: "Citrux backend is running"
+    message: "Citrux backend is running",
+    provider: "Google Gemini"
   });
 });
-
-// --------------------------------------------------
-// DATA URL PARSER
-// --------------------------------------------------
-
-function parseDataUrl(dataUrl) {
-  const match = String(dataUrl || "").match(
-    /^data:([^;]+);base64,(.+)$/
-  );
-
-  if (!match) {
-    return null;
-  }
-
-  return {
-    mimeType: match[1],
-    buffer: Buffer.from(match[2], "base64")
-  };
-}
 
 // --------------------------------------------------
 // CHAT API
@@ -129,7 +109,7 @@ app.post("/api/chat", limiter, async (req, res) => {
     } = req.body;
 
     // ----------------------------------------------
-    // CHECK DAILY USER LIMIT
+    // DAILY LIMIT
     // ----------------------------------------------
 
     const userId = getUserId(req);
@@ -167,22 +147,23 @@ app.post("/api/chat", limiter, async (req, res) => {
     }
 
     // ----------------------------------------------
-    // BUILD OPENAI INPUT
+    // BUILD GEMINI PROMPT
     // ----------------------------------------------
 
-    const input = [];
+    const conversation = [];
 
-    input.push({
-      role: "system",
-      content:
-        "You are Citrux AI, a helpful, intelligent and professional AI assistant. Give clear, accurate and useful answers. When the user provides an image or file, carefully analyze it and answer based on its contents."
-    });
+    conversation.push(
+      "You are Citrux AI, a helpful, intelligent and professional AI assistant. " +
+      "Give clear, accurate and useful answers. " +
+      "When the user provides an image or file, carefully analyze it and answer based on its contents."
+    );
 
     for (const message of cleanMessages) {
-      input.push({
-        role: message.role,
-        content: message.content
-      });
+      const role = message.role === "assistant" ? "Citrux AI" : "User";
+
+      conversation.push(
+        `${role}: ${message.content}`
+      );
     }
 
     // ----------------------------------------------
@@ -195,161 +176,118 @@ app.post("/api/chat", limiter, async (req, res) => {
           continue;
         }
 
-        const parsed = parseDataUrl(attachment.dataUrl);
+        const match = String(attachment.dataUrl).match(
+          /^data:([^;]+);base64,(.+)$/
+        );
 
-        if (!parsed) {
+        if (!match) {
           continue;
         }
 
-        const {
-          mimeType,
-          buffer
-        } = parsed;
+        const mimeType = match[1];
+        const base64Data = match[2];
 
-        // ------------------------------------------
         // IMAGE
-        // ------------------------------------------
-
         if (mimeType.startsWith("image/")) {
-          input.push({
-            role: "user",
-            content: [
-              {
-                type: "input_image",
-                image_url: attachment.dataUrl
-              }
-            ]
+          conversation.push(
+            `User attached an image named "${attachment.name || "image"}".`
+          );
+
+          conversation.push({
+            inlineData: {
+              mimeType,
+              data: base64Data
+            }
           });
 
           continue;
         }
 
-        // ------------------------------------------
         // TEXT / CSV
-        // ------------------------------------------
-
         if (
           mimeType.startsWith("text/") ||
           attachment.name?.toLowerCase().endsWith(".csv")
         ) {
-          const text = buffer.toString("utf8");
+          try {
+            const text = Buffer.from(
+              base64Data,
+              "base64"
+            ).toString("utf8");
 
-          input.push({
-            role: "user",
-            content:
-              `Attached file: ${attachment.name}\n\n${text}`
-          });
+            conversation.push(
+              `Attached file: ${attachment.name || "file"}\n\n${text}`
+            );
+          } catch {
+            conversation.push(
+              `The user attached a file named "${attachment.name || "file"}", but it could not be read as text.`
+            );
+          }
 
           continue;
         }
 
-        // ------------------------------------------
         // OTHER FILE TYPES
-        // ------------------------------------------
-
-        const uploaded = await client.files.create({
-          file: await toFile(
-            buffer,
-            attachment.name || "attachment",
-            {
-              type: mimeType
-            }
-          ),
-          purpose: "user_data"
-        });
-
-        input.push({
-          role: "user",
-          content: [
-            {
-              type: "input_file",
-              file_id: uploaded.id
-            }
-          ]
-        });
+        conversation.push(
+          `The user attached a file named "${attachment.name || "file"}".`
+        );
       }
     }
 
     // ----------------------------------------------
-    // OPENAI REQUEST TIMEOUT
+    // GEMINI REQUEST
     // ----------------------------------------------
 
-    const controller = new AbortController();
+    const response = await ai.models.generateContent({
+      model: MODEL,
+      contents: conversation
+    });
 
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, 60000);
+    const reply =
+      response.text ||
+      "I couldn't generate a response.";
 
-    try {
-      const response = await client.responses.create(
-        {
-          model: MODEL,
-          input
-        },
-        {
-          signal: controller.signal
-        }
-      );
+    // ----------------------------------------------
+    // COUNT SUCCESSFUL MESSAGE
+    // ----------------------------------------------
 
-      clearTimeout(timeout);
+    usage.count++;
 
-      // --------------------------------------------
-      // COUNT SUCCESSFUL MESSAGE
-      // --------------------------------------------
+    res.json({
+      reply,
 
-      usage.count++;
+      usage: {
+        used: usage.count,
+        limit: DAILY_MESSAGE_LIMIT,
+        remaining: Math.max(
+          0,
+          DAILY_MESSAGE_LIMIT - usage.count
+        )
+      }
+    });
 
-      res.json({
-        reply:
-          response.output_text ||
-          "I couldn't generate a response.",
-
-        usage: {
-          used: usage.count,
-          limit: DAILY_MESSAGE_LIMIT,
-          remaining: Math.max(
-            0,
-            DAILY_MESSAGE_LIMIT - usage.count
-          )
-        }
-      });
-    } catch (error) {
-      clearTimeout(timeout);
-      throw error;
-    }
   } catch (error) {
-    console.error("Citrux API error:", error);
+    console.error("Citrux Gemini API error:", error);
 
-    // ----------------------------------------------
-    // FRIENDLY OPENAI RATE LIMIT MESSAGE
-    // ----------------------------------------------
+    const status =
+      error?.status ||
+      error?.statusCode;
 
-    if (error?.code === "rate_limit_exceeded") {
+    // GEMINI RATE LIMIT
+    if (
+      status === 429 ||
+      error?.code === 429 ||
+      String(error?.message || "").toLowerCase().includes("rate limit")
+    ) {
       return res.status(429).json({
         error:
-          "Citrux AI has temporarily reached its API limit. Please try again later."
+          "Citrux AI has temporarily reached its Gemini API limit. Please try again later."
       });
     }
-
-    // ----------------------------------------------
-    // TIMEOUT
-    // ----------------------------------------------
-
-    if (error?.name === "AbortError") {
-      return res.status(504).json({
-        error:
-          "Citrux took too long to respond. Please try again."
-      });
-    }
-
-    // ----------------------------------------------
-    // GENERAL ERROR
-    // ----------------------------------------------
 
     res.status(500).json({
       error:
         error?.message ||
-        "Something went wrong."
+        "Something went wrong while connecting to Gemini."
     });
   }
 });
